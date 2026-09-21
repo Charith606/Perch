@@ -42,6 +42,7 @@ app.include_router(owner.router)
 app.include_router(inquiries.router)
 
 @app.get("/")
+@app.get("/api")
 def root():
     return {
         "status": "online",
