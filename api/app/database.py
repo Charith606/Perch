@@ -11,7 +11,11 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-DB_PATH = os.path.join(BASE_DIR, "perch.db")
+if os.getenv("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+    DB_PATH = os.path.join("/tmp", "perch.db")
+else:
+    DB_PATH = os.path.join(BASE_DIR, "perch.db")
+
 DEFAULT_SQLITE_URL = f"sqlite:///{DB_PATH}"
 
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_SQLITE_URL)
