@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model inquiries {
+  id                   Int               @id @default(autoincrement())
+  property_id          Int
+  user_id              Int?
+  name                 String            @db.VarChar(100)
+  email                String            @db.VarChar(150)
+  phone                String            @db.VarChar(20)
+  message              String
+  preferred_visit_date String?           @db.VarChar(50)
+  status               String?           @db.VarChar(30)
+  created_at           DateTime?         @db.Timestamp(6)
+  property_listings    property_listings @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users                users?            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_inquiries_id")
+}
+
+model owner_profiles {
+  id              Int       @id @default(autoincrement())
+  user_id         Int       @unique
+  company_name    String?   @db.VarChar(150)
+  business_phone  String?   @db.VarChar(20)
+  business_email  String?   @db.VarChar(150)
+  whatsapp_number String?   @db.VarChar(20)
+  address         String?   @db.VarChar(255)
+  is_verified     Boolean?
+  created_at      DateTime? @db.Timestamp(6)
+  users           users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_owner_profiles_id")
+}
+
+model property_listings {
+  id                  Int         @id @default(autoincrement())
+  owner_id            Int
+  title               String      @db.VarChar(200)
+  description         String
+  category            String      @db.VarChar(30)
+  gender_preference   String?     @db.VarChar(30)
+  address             String      @db.VarChar(255)
+  locality            String      @db.VarChar(100)
+  city                String      @db.VarChar(100)
+  state               String      @db.VarChar(100)
+  pincode             String?     @db.VarChar(20)
+  latitude            Float
+  longitude           Float
+  price               Float
+  deposit             Float?
+  maintenance_charges Float?
+  food_included       Boolean?
+  electricity_charges String?     @db.VarChar(100)
+  property_size_sqft  Int?
+  bedrooms_or_sharing String?     @db.VarChar(50)
+  bathrooms           Int?
+  furnishing          String?     @db.VarChar(50)
+  amenities           String?
+  photos              String?
+  rules               String?
+  is_available        Boolean?
+  is_featured         Boolean?
+  rating              Float?
+  total_reviews       Int?
+  contact_name        String?     @db.VarChar(100)
+  contact_phone       String?     @db.VarChar(20)
+  contact_email       String?     @db.VarChar(150)
+  created_at          DateTime?   @db.Timestamp(6)
+  updated_at          DateTime?   @db.Timestamp(6)
+  inquiries           inquiries[]
+  users               users       @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews             reviews[]
+
+  @@index([category], map: "ix_property_listings_category")
+  @@index([city], map: "ix_property_listings_city")
+  @@index([gender_preference], map: "ix_property_listings_gender_preference")
+  @@index([id], map: "ix_property_listings_id")
+  @@index([is_available], map: "ix_property_listings_is_available")
+  @@index([is_featured], map: "ix_property_listings_is_featured")
+  @@index([latitude], map: "ix_property_listings_latitude")
+  @@index([locality], map: "ix_property_listings_locality")
+  @@index([longitude], map: "ix_property_listings_longitude")
+  @@index([price], map: "ix_property_listings_price")
+  @@index([title], map: "ix_property_listings_title")
+}
+
+model reviews {
+  id                Int               @id @default(autoincrement())
+  property_id       Int
+  user_id           Int?
+  user_name         String?           @db.VarChar(100)
+  rating            Float?
+  comment           String
+  created_at        DateTime?         @db.Timestamp(6)
+  property_listings property_listings @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users             users?            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_reviews_id")
+}
+
+model users {
+  id                Int                 @id @default(autoincrement())
+  name              String              @db.VarChar(100)
+  email             String              @unique(map: "ix_users_email") @db.VarChar(150)
+  phone             String              @db.VarChar(20)
+  address           String?             @db.VarChar(255)
+  hashed_password   String              @db.VarChar(255)
+  is_owner          Boolean?
+  role              String?             @db.VarChar(20)
+  avatar            String?             @db.VarChar(255)
+  created_at        DateTime?           @db.Timestamp(6)
+  inquiries         inquiries[]
+  owner_profiles    owner_profiles?
+  property_listings property_listings[]
+  reviews           reviews[]
+
+  @@index([id], map: "ix_users_id")
+}
