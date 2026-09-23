@@ -1,4 +1,4 @@
-export const SEED_PROPERTIES = [
+[
   {
     "id": 1,
     "title": "Shri Harshita Pg For Ladies",
@@ -4184,4 +4184,4 @@ export const SEED_PROPERTIES = [
     "owner_phone": "+91 9845557878",
     "owner_email": "host.hotel@chennaiperch.com"
   }
-];
+]
