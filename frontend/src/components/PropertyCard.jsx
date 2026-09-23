@@ -21,9 +21,7 @@ import { isVideoUrl, getMediaUrl } from '../utils/media';
 
 export default function PropertyCard({ property, onSelect, onContact, currency = 'INR' }) {
   const [photoIndex, setPhotoIndex] = useState(0);
-  const photos = property.photos && property.photos.length > 0 
-    ? property.photos 
-    : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80'];
+  const photos = property.photos && property.photos.length > 0 ? property.photos : [];
 
   const getGenderBadge = (gender) => {
     switch (gender?.toLowerCase()) {
@@ -42,12 +40,12 @@ export default function PropertyCard({ property, onSelect, onContact, currency =
 
   const nextPhoto = (e) => {
     e.stopPropagation();
-    setPhotoIndex((prev) => (prev + 1) % photos.length);
+    if (photos.length > 0) setPhotoIndex((prev) => (prev + 1) % photos.length);
   };
 
   const prevPhoto = (e) => {
     e.stopPropagation();
-    setPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
+    if (photos.length > 0) setPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
   };
 
   const genderBadge = getGenderBadge(property.gender_preference);
@@ -59,8 +57,13 @@ export default function PropertyCard({ property, onSelect, onContact, currency =
     >
       
       {/* Card Image / Video Gallery */}
-      <div className="relative h-56 w-full bg-slate-900 overflow-hidden">
-        {isVideoUrl(photos[photoIndex]) ? (
+      <div className="relative h-56 w-full bg-slate-800 overflow-hidden flex items-center justify-center">
+        {photos.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-slate-400 p-4 text-center">
+            <Maximize2 className="w-10 h-10 mb-2 opacity-50" />
+            <span className="text-xs font-semibold">No photos uploaded by owner yet</span>
+          </div>
+        ) : isVideoUrl(photos[photoIndex]) ? (
           <video
             src={getMediaUrl(photos[photoIndex])}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
