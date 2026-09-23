@@ -49,6 +49,8 @@ export default function TopRatedSlider({ properties = [], onSelectProperty, curr
     }
   };
 
+  if (!properties || properties.length === 0) return null;
+
   return (
     <div className="relative py-6 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white overflow-hidden rounded-3xl my-6 shadow-2xl border border-slate-800">
       
@@ -107,7 +109,7 @@ export default function TopRatedSlider({ properties = [], onSelectProperty, curr
         >
           {properties.map((item) => {
             const genderBadge = getGenderBadge(item.gender_preference);
-            const photoUrl = item.photos && item.photos[0] ? item.photos[0] : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80';
+            const photoUrl = item.photos && item.photos.length > 0 ? item.photos[0] : null;
 
             return (
               <div

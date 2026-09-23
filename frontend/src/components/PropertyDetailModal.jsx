@@ -48,7 +48,7 @@ export default function PropertyDetailModal({ property, onClose, userLocation, o
 
   const photos = property.photos && property.photos.length > 0
     ? property.photos
-    : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'];
+    : [];
 
   const getGenderBadge = (gender) => {
     switch (gender?.toLowerCase()) {
@@ -147,7 +147,12 @@ export default function PropertyDetailModal({ property, onClose, userLocation, o
           
           {/* Photo & Video Showcase Carousel */}
           <div className="relative h-72 sm:h-96 w-full rounded-2xl overflow-hidden bg-slate-950 group flex items-center justify-center">
-            {isVideoUrl(photos[activePhotoIdx]) ? (
+            {photos.length === 0 ? (
+              <div className="flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+                <Maximize2 className="w-12 h-12 mb-2 opacity-40 text-slate-500" />
+                <span className="text-sm font-semibold text-slate-400">No photos uploaded by owner yet</span>
+              </div>
+            ) : isVideoUrl(photos[activePhotoIdx]) ? (
               <video
                 src={getMediaUrl(photos[activePhotoIdx])}
                 controls
@@ -165,21 +170,23 @@ export default function PropertyDetailModal({ property, onClose, userLocation, o
             )}
             
             {/* Top Right Controls & Video Tag */}
-            <div className="absolute top-3 right-3 flex items-center gap-2">
-              {isVideoUrl(photos[activePhotoIdx]) && (
-                <div className="px-3 py-1 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase flex items-center gap-1 shadow-lg pointer-events-none">
-                  <span>🎥 Walkthrough Video</span>
-                </div>
-              )}
-              <button
-                onClick={() => setShowLightbox(true)}
-                className="px-2.5 py-1.5 rounded-xl bg-black/60 hover:bg-black/90 text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-md border border-white/20 transition-all shadow-md"
-                title="View Full Resolution Uncropped"
-              >
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>Full View</span>
-              </button>
-            </div>
+            {photos.length > 0 && (
+              <div className="absolute top-3 right-3 flex items-center gap-2">
+                {isVideoUrl(photos[activePhotoIdx]) && (
+                  <div className="px-3 py-1 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase flex items-center gap-1 shadow-lg pointer-events-none">
+                    <span>🎥 Walkthrough Video</span>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowLightbox(true)}
+                  className="px-2.5 py-1.5 rounded-xl bg-black/60 hover:bg-black/90 text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-md border border-white/20 transition-all shadow-md"
+                  title="View Full Resolution Uncropped"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Full View</span>
+                </button>
+              </div>
+            )}
 
             {photos.length > 1 && (
               <>

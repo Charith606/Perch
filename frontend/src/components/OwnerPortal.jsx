@@ -85,11 +85,8 @@ export default function OwnerPortal({ user, onOpenAuth, currency = 'INR' }) {
     bedrooms_or_sharing: '2 Sharing',
     bathrooms: 1,
     furnishing: 'Furnished',
-    amenities: ['High-Speed WiFi', '3 Meals Daily', 'Power Backup', 'Washing Machine'],
-    photos: [
-      'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1000&q=80'
-    ],
+    amenities: ['High-Speed WiFi', 'Power Backup'],
+    photos: [],
     photoInput: '',
     rules: ['No smoking in rooms', 'Gate closes at 11:00 PM'],
     ruleInput: '',
