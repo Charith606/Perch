@@ -5,11 +5,25 @@ from typing import Optional
 try:
     from jose import JWTError, jwt
 except ImportError:
-    import jwt
-    class JWTError(Exception):
-        pass
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+    try:
+        import jwt
+        class JWTError(Exception):
+            pass
+    except ImportError:
+        jwt = None
+        class JWTError(Exception):
+            pass
+
+try:
+    from fastapi import Depends, HTTPException, status
+    from fastapi.security import OAuth2PasswordBearer
+except ImportError:
+    Depends = lambda x: x
+    HTTPException = Exception
+    class status:
+        HTTP_401_UNAUTHORIZED = 401
+        HTTP_403_FORBIDDEN = 403
+    OAuth2PasswordBearer = lambda **kwargs: None
 from sqlalchemy.orm import Session
 from .database import get_db
 from .models import User
